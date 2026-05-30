@@ -2205,6 +2205,24 @@ export class AgentSession {
 						});
 					});
 				},
+				runCommand: (command, options) => {
+					const text = command.startsWith("/") ? command : `/${command}`;
+					void (async () => {
+						if (options?.waitForIdle) {
+							await this.agent.waitForIdle();
+						}
+						const handled = await this._tryExecuteExtensionCommand(text);
+						if (!handled) {
+							throw new Error(`Extension command not found: ${text}`);
+						}
+					})().catch((err) => {
+						runner.emitError({
+							extensionPath: "<runtime>",
+							event: "run_command",
+							error: err instanceof Error ? err.message : String(err),
+						});
+					});
+				},
 				appendEntry: (customType, data) => {
 					this.sessionManager.appendCustomEntry(customType, data);
 				},

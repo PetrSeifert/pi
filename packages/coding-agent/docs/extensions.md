@@ -1319,6 +1319,19 @@ When not streaming, the message is sent immediately and triggers a new turn. Whe
 
 See [send-user-message.ts](../examples/extensions/send-user-message.ts) for a complete example.
 
+### pi.runCommand(command, options?)
+
+Execute an extension slash command programmatically without sending it to the agent. This is useful when a tool or event needs to hand off to command-only session controls after the current turn finishes.
+
+```typescript
+pi.runCommand("/my-command arg", { waitForIdle: true });
+```
+
+**Options:**
+- `waitForIdle` - Wait for the current agent turn to finish before executing the command.
+
+Only extension commands are supported. Built-in interactive commands, skills, and prompt templates are not executed through this API.
+
 ### pi.appendEntry(customType, data?)
 
 Persist extension state (does NOT participate in LLM context).
